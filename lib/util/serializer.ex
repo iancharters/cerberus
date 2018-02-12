@@ -7,9 +7,11 @@ defmodule Cerberus.Serializer do
       iex> Cerberus.Serializer.parse("VID=1043;CPUTEMP=61;GPU=0;BUS=1")
       %{"BUS" => "1", "CPUTEMP" => "61", "GPU" => "0", "VID" => "1043"}
   """
-  def parse(input, type) do
-    list = input
-            |> String.split "|"
+
+  # TODO: Fix me
+
+  def parse(input, _type) do
+    list = String.split(input, "|")
 
     # Enum.reduce list, %{}, fn item, acc ->
     #   #Creates a key/value pair from the "xxx=yyy" formatted input
@@ -24,17 +26,24 @@ defmodule Cerberus.Serializer do
   end
 
   def parse(input) do
+    list = String.split(input, ";")
 
-    list = input
-            |> String.split ";"
-
-    Enum.reduce list, %{}, fn item, acc ->
-      #Creates a key/value pair from the "xxx=yyy" formatted input
+    Enum.reduce(list, %{}, fn item, acc ->
+      # Creates a key/value pair from the "xxx=yyy" formatted input
       kvp = String.split(item, "=")
+      key = Enum.at(kvp, 0)
 
-      #Build the map with our values.
-      acc
-        |> Map.put(Enum.at(kvp, 0), Enum.at(kvp, 1))
-    end
+      value =
+        Enum.at(kvp, 1)
+        |> String.split("|")
+        |> Enum.at(0)
+
+      # Build the map with our values.
+      result =
+        acc
+        |> Map.put(key, value)
+
+      result
+    end)
   end
 end
