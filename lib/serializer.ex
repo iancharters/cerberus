@@ -4,7 +4,7 @@ defmodule Cerberus.Serializer do
   into a map.
 
   ## Example
-      iex> Monitor.Serializer.parse("VID=1043;CPUTEMP=61;GPU=0;BUS=1")
+      iex> Cerberus.Serializer.parse("VID=1043;CPUTEMP=61;GPU=0;BUS=1")
       %{"BUS" => "1", "CPUTEMP" => "61", "GPU" => "0", "VID" => "1043"}
   """
   def parse(input, type) do

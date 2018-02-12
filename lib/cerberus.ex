@@ -1,36 +1,33 @@
-defmodule Monitor do
+defmodule Cerberus do
   @host "192.168.1.5"
-  @host2 "24.86.237.90"
   @port 3001
-
-  @functions ["summary, pool, histo, hwinfo, scanlog"]
 
   @doc ~S"""
    Creates a raw TCP socket to the miner.
 
   ## Examples
 
-      iex> socket = Monitor.connect()
+      iex> socket = Cerberus.connect()
       iex> is_port(socket)
       true
 
   """
 
   def connect() do
-    {:ok, socket} = Socket.TCP.connect({@host2, @port}, options: [:keepalive])
+    {:ok, socket} = Socket.TCP.connect({@host, @port}, options: [:keepalive])
 
     socket
   end
 
   @doc ~S"""
-   Waits for a response after making a `Monitor.query()` request.  Response is
-   serialized using `Monitor.Serializer.parse()`.
+   Waits for a response after making a `Cerberus.query()` request.  Response is
+   serialized using `Cerberus.Serializer.parse()`.
 
   ## Examples
 
-      iex> socket = Monitor.connect()
+      iex> socket = Cerberus.connect()
       iex> Socket.Stream.send(socket, "summary")
-      iex> response = Monitor.recv(socket)
+      iex> response = Cerberus.recv(socket)
       iex> is_map(response)
       true
 
@@ -39,7 +36,7 @@ defmodule Monitor do
     response = socket
       |> Socket.Stream.recv!()
       |> to_string
-      |> Monitor.Serializer.parse(type)
+      |> Cerberus.Serializer.parse(type)
 
     IO.inspect response
 
@@ -50,7 +47,7 @@ defmodule Monitor do
     response = socket
       |> Socket.Stream.recv!()
       |> to_string
-      |> Monitor.Serializer.parse
+      |> Cerberus.Serializer.parse
 
     IO.inspect response
 
